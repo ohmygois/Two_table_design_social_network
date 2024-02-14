@@ -33,8 +33,8 @@ I'd like each of my posts to have a number of views.
 ```
 Nouns:
 
-user_account --> email, username
-posts --> title, content, views, user_account_id
+accounts --> email, username
+posts --> title, content, views, account_id
 ```
 
 ## 2. Infer the Table Name and Columns
@@ -43,16 +43,16 @@ Put the different nouns in this table. Replace the example with your own nouns.
 
 | Record                | Properties          |
 | --------------------- | ------------------  |
-| user_account          | email, username
-| posts                 | title, content, views, user_account_id
+| accounts              | email, username
+| posts                 | title, content, views, account_id
 
-1. Name of the first table (always plural): `albums` 
+1. Name of the first table (always plural): `accounts` 
 
-    Column names: `title`, `release_year`
+    Column names: `email`, `username`
 
-2. Name of the second table (always plural): `artists` 
+2. Name of the second table (always plural): `posts` 
 
-    Column names: `name`
+    Column names: `title`, `content`, `views`, `account_id`
 
 ## 3. Decide the column types
 
@@ -65,14 +65,17 @@ Remember to **always** have the primary key `id` as a first column. Its type wil
 ```
 # EXAMPLE:
 
-Table: albums
+Table: accounts
+id: SERIAL
+email: text
+username: text
+
+Table: posts
 id: SERIAL
 title: text
-release_year: int
-
-Table: artists
-id: SERIAL
-name: text
+content: text
+views: int
+account_id: int
 ```
 
 ## 4. Decide on The Tables Relationship
@@ -81,8 +84,8 @@ Most of the time, you'll be using a **one-to-many** relationship, and will need 
 
 To decide on which one, answer these two questions:
 
-1. Can one [TABLE ONE] have many [TABLE TWO]? (Yes/No)
-2. Can one [TABLE TWO] have many [TABLE ONE]? (Yes/No)
+1. Can one accounts have many posts? (Yes)
+2. Can one posts have many accounts? (No)
 
 You'll then be able to say that:
 
@@ -91,19 +94,6 @@ You'll then be able to say that:
 3. In that case, the foreign key is in the table [B]
 
 Replace the relevant bits in this example with your own:
-
-```
-# EXAMPLE
-
-1. Can one artist have many albums? YES
-2. Can one album have many artists? NO
-
--> Therefore,
--> An artist HAS MANY albums
--> An album BELONGS TO an artist
-
--> Therefore, the foreign key is on the albums table.
-```
 
 *If you can answer YES to the two questions, you'll probably have to implement a Many-to-Many relationship, which is more complex and needs a third table (called a join table).*
 
@@ -116,20 +106,32 @@ Replace the relevant bits in this example with your own:
 -- Replace the table name, columm names and types.
 
 -- Create the table without the foreign key first.
-CREATE TABLE artists (
+
+Table: posts
+id: SERIAL
+title: text
+content: text
+views: int
+account_id: int
+
+CREATE TABLE accounts (
   id SERIAL PRIMARY KEY,
-  name text,
+  email text,
+  username text
 );
 
 -- Then the table with the foreign key second.
-CREATE TABLE albums (
-  id SERIAL PRIMARY KEY,
+CREATE TABLE posts (
+  id SERIAL,
   title text,
-  release_year int,
+  content text,
+  views int,
+  account_id int
+
 -- The foreign key name is always {other_table_singular}_id
-  artist_id int,
-  constraint fk_artist foreign key(artist_id)
-    references artists(id)
+  account_id int,
+  constraint fk_account foreign key(account_id)
+    references accounts(id)
     on delete cascade
 );
 
@@ -138,5 +140,5 @@ CREATE TABLE albums (
 ## 6. Create the tables
 
 ```bash
-psql -h 127.0.0.1 database_name < albums_table.sql
+psql -h 127.0.0.1 social_network < social_network.sql
 ```
