@@ -135,6 +135,8 @@ CREATE TABLE posts (
     on delete cascade
 );
 
+
+
 ```
 
 ## 6. Create the tables
