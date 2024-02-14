@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS accounts;
-DROP SEQUENCE IF EXISTS accounts_id_seq;
 DROP TABLE IF EXISTS posts;
 DROP SEQUENCE IF EXISTS posts_id_seq;
+DROP TABLE IF EXISTS accounts;
+DROP SEQUENCE IF EXISTS accounts_id_seq;
 
 
 CREATE SEQUENCE IF NOT EXISTS accounts_id_seq;
