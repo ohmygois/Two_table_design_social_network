@@ -26,3 +26,7 @@ class PostRepo:
     def create(self, post):
         rows = self._connection.execute("INSERT INTO posts (title, content, views, account_id) VALUES (%s,%s,%s,%s)",[post.title, post.content, post.views, post.account_id])
         return None
+
+    def delete(self, title):
+        rows = self._connection.execute("DELETE FROM posts WHERE title=%s",[title])
+        return None
