@@ -14,3 +14,8 @@ class AccountRepo:
             accounts.append(account)
         
         return accounts
+    
+    def find(self, username):
+        rows = self._connection.execute('SELECT * FROM accounts WHERE username=%s', [username])
+        row = rows[0]
+        return Account(row['email'], row['username'])
